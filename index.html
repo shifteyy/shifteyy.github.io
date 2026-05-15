@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shifteyy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0a0a; --surface: #111; --surface2: #161616;
+      --border: #1f1f1f; --border2: #2a2a2a; --accent: #5b8fff;
+      --text: #e2e2e2; --text2: #888; --text3: #555;
+      --mono: 'Geist Mono', monospace; --sans: 'Geist', sans-serif; --r: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .container { max-width: 680px; margin: 0 auto; padding: 64px 24px 80px; }
+    .container { max-width: 780px; margin: 0 auto; padding: 72px 28px 90px; }
+    .hero { display: flex; align-items: center; gap: 26px; margin-bottom: 58px; }
+    .avatar { width: 82px; height: 82px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: var(--surface2); }
+    .hero-right h1 { font-family: var(--mono); font-size: 25px; font-weight: 500; color: var(--text); letter-spacing: -0.3px; margin-bottom: 12px; }
+    .links-row { display: flex; flex-wrap: wrap; gap: 7px; }
+    .link-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: var(--surface); border: 1px solid var(--border2); border-radius: 5px; font-size: 12px; font-family: var(--mono); color: var(--text2); text-decoration: none; transition: border-color .12s, color .12s; }
+    .link-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .link-chip svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+    .section { margin-bottom: 46px; }
+    .section-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); margin-bottom: 14px; }
+    .game-tabs { display: flex; gap: 7px; margin-bottom: 16px; }
+    .game-tab { padding: 6px 16px; background: transparent; border: 1px solid var(--border2); border-radius: 5px; cursor: pointer; font-family: var(--mono); font-size: 12px; color: var(--text3); transition: all .12s; }
+    .game-tab.active { border-color: var(--accent); color: var(--accent); }
+    .game-tab-panel { display: none; }
+    .game-tab-panel.active { display: block; }
+    .tabs { display: flex; margin-bottom: 18px; border: 1px solid var(--border2); border-radius: var(--r); overflow: hidden; }
+    .tab { flex: 1; padding: 8px 0; font-family: var(--mono); font-size: 11px; text-align: center; cursor: pointer; color: var(--text3); border: none; background: var(--surface); transition: background .12s, color .12s; letter-spacing: .5px; border-right: 1px solid var(--border2); }
+    .tab:last-child { border-right: none; }
+    .tab.active { background: var(--surface2); color: var(--text); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 18px; }
+    .card.wide { grid-column: 1 / -1; }
+    .card-key { font-size: 11px; font-family: var(--mono); color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .card-val { font-family: var(--mono); font-size: 22px; font-weight: 500; color: var(--text); }
+    .card-val.sm { font-size: 14px; line-height: 1.6; }
+    .card-val.edpi { color: var(--accent); }
+    .card-sub { font-size: 12px; color: var(--text3); margin-top: 3px; }
+    .list { display: flex; flex-direction: column; gap: 1px; }
+    .list-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 16px; background: var(--surface); font-size: 14px; }
+    .list-row:first-child { border-radius: var(--r) var(--r) 0 0; }
+    .list-row:last-child { border-radius: 0 0 var(--r) var(--r); }
+    .list-row:only-child { border-radius: var(--r); }
+    .list-key { font-family: var(--mono); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; }
+    .list-val { color: var(--text); font-size: 13px; font-family: var(--mono); }
+    .list-gap { height: 8px; }
+    .crosshair-wrap { display: flex; align-items: flex-start; gap: 22px; }
+    .crosshair-canvas { width: 72px; height: 72px; background: #000; border-radius: 6px; flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; }
+    .ch { position: absolute; }
+    /* CS2: green, gap -4, size 1, thickness 1 */
+    .cs2-ch { background: #00ff41; }
+    .ch-hl { width: 5px; height: 1.5px; left: calc(50% - 9px); top: calc(50% - 0.75px); }
+    .ch-hr { width: 5px; height: 1.5px; left: calc(50% + 4px); top: calc(50% - 0.75px); }
+    .ch-vt { width: 1.5px; height: 5px; left: calc(50% - 0.75px); top: calc(50% - 9px); }
+    .ch-vb { width: 1.5px; height: 5px; left: calc(50% - 0.75px); top: calc(50% + 4px); }
+    /* Valorant: white, inner lines length 6, thickness 1, offset 1 */
+    .val-ch { background: #fff; }
+    .vch-hl { width: 6px; height: 1px; left: calc(50% - 8px); top: calc(50% - 0.5px); }
+    .vch-hr { width: 6px; height: 1px; left: calc(50% + 2px); top: calc(50% - 0.5px); }
+    .vch-vt { width: 1px; height: 6px; left: calc(50% - 0.5px); top: calc(50% - 8px); }
+    .vch-vb { width: 1px; height: 6px; left: calc(50% - 0.5px); top: calc(50% + 2px); }
+    .crosshair-info { flex: 1; }
+    .copy-btn { font-family: var(--mono); font-size: 11px; color: var(--text3); background: var(--surface2); border: 1px solid var(--border2); border-radius: 4px; padding: 4px 10px; cursor: pointer; transition: color .12s, border-color .12s; }
+    .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .xhair-params { margin-top: 16px; }
+    .binds-table { width: 100%; border-collapse: collapse; }
+    .binds-table tr { border-bottom: 1px solid var(--border); }
+    .binds-table tr:last-child { border-bottom: none; }
+    .binds-table td { padding: 9px 0; font-size: 13px; vertical-align: middle; }
+    .binds-table td:first-child { font-family: var(--mono); color: var(--text3); font-size: 12px; }
+    .binds-table td:last-child { text-align: right; }
+    .keys { display: inline-flex; justify-content: flex-end; flex-wrap: wrap; gap: 4px; }
+    kbd { background: var(--surface2); border: 1px solid var(--border2); border-radius: 4px; padding: 3px 8px; font-size: 11px; font-family: var(--mono); color: var(--text2); }
+    .cmd-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+    .cmd-header { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--border); background: var(--surface2); }
+    .cmd-label { font-family: var(--mono); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text3); flex: 1; }
+    .copy-hint { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+    .cmd-body { padding: 11px 16px; display: flex; flex-direction: column; gap: 2px; }
+    .cmd-line { display: flex; gap: 12px; padding: 5px 0; font-family: var(--mono); font-size: 13px; }
+    .cmd-name { color: var(--text3); flex-shrink: 0; }
+    .cmd-val { color: var(--text); }
+    .footer { margin-top: 68px; padding-top: 22px; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 11px; color: var(--text3); display: flex; justify-content: space-between; align-items: center; }
+    @media (max-width: 500px) {
+      .settings-grid { grid-template-columns: 1fr; }
+      .card.wide { grid-column: 1; }
+      .hero { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <img class="avatar" src="data:image/png;base64,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" alt="shifteyy" />
+    <div class="hero-right">
+      <h1>shifteyy</h1>
+      <div class="links-row">
+        <a class="link-chip" href="https://steamcommunity.com/profiles/76561198388953786" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.718L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.606 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.497 1.009 2.455-.397.957-1.497 1.41-2.455 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.252 0-2.265-1.014-2.265-2.265z"/></svg>
+          steam
+        </a>
+        <a class="link-chip" href="https://www.faceit.com/en/players/shifteyy" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M1 7.188L7.19 1h9.625l6.19 6.188v9.625L16.81 23H7.19L1 16.813V7.188zm8.922 9.374h4.156v-4.156h-4.156v4.156zM9.922 7.438H5.766v4.156h4.156V7.438zm4.156 0v4.156h4.156V7.438h-4.156z"/></svg>
+          faceit
+        </a>
+        <span class="link-chip">
+          <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+          shifteyy
+        </span>
+        <a class="link-chip" href="https://myanimelist.net/profile/shiftey" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+          MAL
+        </a>
+        <a class="link-chip" href="https://letterboxd.com/shifteyy" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24"><path d="M7 5C4.8 5 3 6.8 3 9v6c0 2.2 1.8 4 4 4h10c2.2 0 4-1.8 4-4V9c0-2.2-1.8-4-4-4H7zm0 2h10c1.1 0 2 .9 2 2v6c0 1.1-.9 2-2 2H7c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2zm1 1v8l6-4-6-4z"/></svg>
+          letterboxd
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">config</div>
+    <div class="game-tabs">
+      <button class="game-tab active" onclick="switchGame('cs2',this)">CS2</button>
+      <button class="game-tab" onclick="switchGame('val',this)">VALORANT</button>
+    </div>
+
+    <!-- CS2 -->
+    <div class="game-tab-panel active" id="game-cs2">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('cs2','mouse',this)">mouse</button>
+        <button class="tab" onclick="switchTab('cs2','video',this)">video</button>
+        <button class="tab" onclick="switchTab('cs2','crosshair',this)">crosshair</button>
+        <button class="tab" onclick="switchTab('cs2','viewmodel',this)">viewmodel</button>
+        <button class="tab" onclick="switchTab('cs2','hud',this)">hud</button>
+        <button class="tab" onclick="switchTab('cs2','binds',this)">binds</button>
+      </div>
+      <div class="tab-panel active" id="cs2-mouse">
+        <div class="settings-grid">
+          <div class="card"><div class="card-key">DPI</div><div class="card-val">400</div></div>
+          <div class="card"><div class="card-key">Sensitivity</div><div class="card-val">1.48</div></div>
+          <div class="card"><div class="card-key">eDPI</div><div class="card-val edpi">592</div><div class="card-sub">DPI × sensitivity</div></div>
+          <div class="card"><div class="card-key">Polling Rate</div><div class="card-val">1000 Hz</div></div>
+          <div class="card"><div class="card-key">Zoom Sensitivity</div><div class="card-val">1.0</div></div>
+          <div class="card"><div class="card-key">m_yaw</div><div class="card-val">0.022</div></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="cs2-video">
+        <div class="list">
+          <div class="list-row"><span class="list-key">Brightness</span><span class="list-val">93%</span></div>
+          <div class="list-row"><span class="list-key">Scaling Mode</span><span class="list-val">Stretched</span></div>
+          <div class="list-row"><span class="list-key">Aspect Ratio</span><span class="list-val">4:3</span></div>
+          <div class="list-row"><span class="list-key">Resolution</span><span class="list-val">1280x960</span></div>
+          <div class="list-row"><span class="list-key">Display Mode</span><span class="list-val">Fullscreen</span></div>
+          <div class="list-row"><span class="list-key">Refresh Rate</span><span class="list-val">240 Hz</span></div>
+        </div>
+        <div class="list-gap"></div>
+        <div class="list">
+          <div class="list-row"><span class="list-key">Boost Player Contrast</span><span class="list-val">Enabled</span></div>
+          <div class="list-row"><span class="list-key">V-Sync</span><span class="list-val">Disabled</span></div>
+          <div class="list-row"><span class="list-key">Anti-Aliasing</span><span class="list-val">4x MSAA</span></div>
+          <div class="list-row"><span class="list-key">Global Shadow Quality</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">Model / Texture Detail</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">Texture Filtering</span><span class="list-val">Trilinear</span></div>
+          <div class="list-row"><span class="list-key">Shader Detail</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">Particle Detail</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">Ambient Occlusion</span><span class="list-val">Disabled</span></div>
+          <div class="list-row"><span class="list-key">High Dynamic Range</span><span class="list-val">Quality</span></div>
+          <div class="list-row"><span class="list-key">FidelityFX Super Resolution</span><span class="list-val">Disabled (Highest Quality)</span></div>
+          <div class="list-row"><span class="list-key">NVIDIA Reflex Low Latency</span><span class="list-val">Enabled</span></div>
+        </div>
+        <div class="list-gap"></div>
+        <div class="list">
+          <div class="list-row"><span class="list-key">Full Screen Optimizations</span><span class="list-val">Off</span></div>
+          <div class="list-row"><span class="list-key">NVCP Low Latency Mode</span><span class="list-val">Off</span></div>
+          <div class="list-row"><span class="list-key">Launch Options</span><span class="list-val">+exec autoexec.cfg</span></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="cs2-crosshair">
+        <div class="card">
+          <div class="crosshair-wrap">
+            <div class="crosshair-canvas">
+              <div class="ch cs2-ch ch-hl"></div>
+              <div class="ch cs2-ch ch-hr"></div>
+              <div class="ch cs2-ch ch-vt"></div>
+              <div class="ch cs2-ch ch-vb"></div>
+            </div>
+            <div class="crosshair-info">
+              <div class="card-key" style="margin-bottom:8px;">Share Code</div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--text2);word-break:break-all;line-height:1.6;margin-bottom:8px;">CSGO-2jDWQ-LiNnF-6k24R-DZ5Dh-Y2hWA</div>
+              <button class="copy-btn" onclick="copyCode('CSGO-2jDWQ-LiNnF-6k24R-DZ5Dh-Y2hWA','cs2-copy-hint')">copy code</button>
+              <span id="cs2-copy-hint" style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:8px;"></span>
+            </div>
+          </div>
+          <div class="xhair-params">
+            <div class="list">
+              <div class="list-row"><span class="list-key">Style</span><span class="list-val">Classic Static (4)</span></div>
+              <div class="list-row"><span class="list-key">Color</span><span class="list-val">Green (4)</span></div>
+              <div class="list-row"><span class="list-key">Size</span><span class="list-val">1</span></div>
+              <div class="list-row"><span class="list-key">Gap</span><span class="list-val">-4</span></div>
+              <div class="list-row"><span class="list-key">Thickness</span><span class="list-val">1</span></div>
+              <div class="list-row"><span class="list-key">Dot</span><span class="list-val">No</span></div>
+              <div class="list-row"><span class="list-key">Outline</span><span class="list-val">No</span></div>
+              <div class="list-row"><span class="list-key">Recoil</span><span class="list-val">No</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="cs2-viewmodel">
+        <div class="cmd-block">
+          <div class="cmd-header">
+            <span class="cmd-label">viewmodel</span>
+            <button class="copy-btn" onclick="copyCode('viewmodel_fov 68;viewmodel_offset_x 2.5;viewmodel_offset_y -2;viewmodel_offset_z -1.5','vm-hint')">copy</button>
+            <span id="vm-hint" class="copy-hint"></span>
+          </div>
+          <div class="cmd-body">
+            <div class="cmd-line"><span class="cmd-name">viewmodel_fov</span><span class="cmd-val">68</span></div>
+            <div class="cmd-line"><span class="cmd-name">viewmodel_offset_x</span><span class="cmd-val">2.5</span></div>
+            <div class="cmd-line"><span class="cmd-name">viewmodel_offset_y</span><span class="cmd-val">-2</span></div>
+            <div class="cmd-line"><span class="cmd-name">viewmodel_offset_z</span><span class="cmd-val">-1.5</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="cs2-hud">
+        <div class="cmd-block">
+          <div class="cmd-header">
+            <span class="cmd-label">hud</span>
+            <button class="copy-btn" onclick="copyCode('cl_hud_color 5;cl_showloadout true;safezonex 0.88;safezoney 0.8','hud-hint')">copy</button>
+            <span id="hud-hint" class="copy-hint"></span>
+          </div>
+          <div class="cmd-body">
+            <div class="cmd-line"><span class="cmd-name">cl_hud_color</span><span class="cmd-val">5</span></div>
+            <div class="cmd-line"><span class="cmd-name">cl_showloadout</span><span class="cmd-val">true</span></div>
+            <div class="cmd-line"><span class="cmd-name">safezonex</span><span class="cmd-val">0.88</span></div>
+            <div class="cmd-line"><span class="cmd-name">safezoney</span><span class="cmd-val">0.8</span></div>
+          </div>
+        </div>
+        <div class="list-gap"></div>
+        <div class="cmd-block">
+          <div class="cmd-header">
+            <span class="cmd-label">radar</span>
+            <button class="copy-btn" onclick="copyCode('cl_hud_radar_scale 1.1;cl_radar_scale 0.32;cl_radar_always_centered true;cl_radar_rotate true;cl_radar_icon_scale_min 0.6','radar-hint')">copy</button>
+            <span id="radar-hint" class="copy-hint"></span>
+          </div>
+          <div class="cmd-body">
+            <div class="cmd-line"><span class="cmd-name">cl_hud_radar_scale</span><span class="cmd-val">1.1</span></div>
+            <div class="cmd-line"><span class="cmd-name">cl_radar_scale</span><span class="cmd-val">0.32</span></div>
+            <div class="cmd-line"><span class="cmd-name">cl_radar_always_centered</span><span class="cmd-val">true</span></div>
+            <div class="cmd-line"><span class="cmd-name">cl_radar_rotate</span><span class="cmd-val">true</span></div>
+            <div class="cmd-line"><span class="cmd-name">cl_radar_icon_scale_min</span><span class="cmd-val">0.6</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="cs2-binds">
+        <div class="card">
+          <table class="binds-table">
+            <tr><td>Move Forward</td><td><div class="keys"><kbd>W</kbd></div></td></tr>
+            <tr><td>Move Backward</td><td><div class="keys"><kbd>S</kbd></div></td></tr>
+            <tr><td>Strafe Left</td><td><div class="keys"><kbd>A</kbd></div></td></tr>
+            <tr><td>Strafe Right</td><td><div class="keys"><kbd>D</kbd></div></td></tr>
+            <tr><td>Walk</td><td><div class="keys"><kbd>SHIFT</kbd></div></td></tr>
+            <tr><td>Duck</td><td><div class="keys"><kbd>CTRL</kbd><kbd>C</kbd></div></td></tr>
+            <tr><td>Jump</td><td><div class="keys"><kbd>SPACE</kbd><kbd>MWUP</kbd><kbd>MWDN</kbd></div></td></tr>
+            <tr><td>Use</td><td><div class="keys"><kbd>E</kbd></div></td></tr>
+            <tr><td>Fire</td><td><div class="keys"><kbd>MOUSE1</kbd></div></td></tr>
+            <tr><td>Secondary Fire</td><td><div class="keys"><kbd>MOUSE2</kbd></div></td></tr>
+            <tr><td>Flashbang</td><td><div class="keys"><kbd>MOUSE4</kbd></div></td></tr>
+            <tr><td>Smoke</td><td><div class="keys"><kbd>MOUSE5</kbd></div></td></tr>
+            <tr><td>Molotov</td><td><div class="keys"><kbd>MOUSE3</kbd></div></td></tr>
+            <tr><td>Toggle Radar</td><td><div class="keys"><kbd>Q</kbd></div></td></tr>
+            <tr><td>Toggle Console</td><td><div class="keys"><kbd>F8</kbd></div></td></tr>
+            <tr><td>Scoreboard</td><td><div class="keys"><kbd>TAB</kbd></div></td></tr>
+            <tr><td>Player Ping</td><td><div class="keys"><kbd>X</kbd></div></td></tr>
+            <tr><td>Chat</td><td><div class="keys"><kbd>Y</kbd></div></td></tr>
+            <tr><td>Radio</td><td><div class="keys"><kbd>Z</kbd></div></td></tr>
+            <tr><td>Mic</td><td><div class="keys"><kbd>V</kbd></div></td></tr>
+            <tr><td>Switch Hands</td><td><div class="keys"><kbd>`</kbd></div></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALORANT -->
+    <div class="game-tab-panel" id="game-val">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('val','mouse',this)">mouse</button>
+        <button class="tab" onclick="switchTab('val','video',this)">video</button>
+        <button class="tab" onclick="switchTab('val','crosshair',this)">crosshair</button>
+        <button class="tab" onclick="switchTab('val','binds',this)">binds</button>
+      </div>
+      <div class="tab-panel active" id="val-mouse">
+        <div class="settings-grid">
+          <div class="card"><div class="card-key">DPI</div><div class="card-val">400</div></div>
+          <div class="card"><div class="card-key">Sensitivity</div><div class="card-val">0.456</div></div>
+          <div class="card"><div class="card-key">eDPI</div><div class="card-val edpi">182</div><div class="card-sub">DPI × sensitivity</div></div>
+          <div class="card"><div class="card-key">Polling Rate</div><div class="card-val">1000 Hz</div></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="val-video">
+        <div class="list">
+          <div class="list-row"><span class="list-key">Resolution</span><span class="list-val">1920x1080</span></div>
+          <div class="list-row"><span class="list-key">Display Mode</span><span class="list-val">Fullscreen</span></div>
+          <div class="list-row"><span class="list-key">V-Sync</span><span class="list-val">Off</span></div>
+          <div class="list-row"><span class="list-key">Limit FPS Always</span><span class="list-val">On</span></div>
+        </div>
+        <div class="list-gap"></div>
+        <div class="list">
+          <div class="list-row"><span class="list-key">Material Quality</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">Texture Quality</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">Detail Quality</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">UI Quality</span><span class="list-val">Low</span></div>
+          <div class="list-row"><span class="list-key">Anti-Aliasing</span><span class="list-val">None</span></div>
+          <div class="list-row"><span class="list-key">Shadows</span><span class="list-val">Off</span></div>
+          <div class="list-row"><span class="list-key">Bloom</span><span class="list-val">Off</span></div>
+          <div class="list-row"><span class="list-key">Distortion</span><span class="list-val">Off</span></div>
+        </div>
+      </div>
+      <div class="tab-panel" id="val-crosshair">
+        <div class="card">
+          <div class="crosshair-wrap">
+            <div class="crosshair-canvas">
+              <div class="ch val-ch vch-hl"></div>
+              <div class="ch val-ch vch-hr"></div>
+              <div class="ch val-ch vch-vt"></div>
+              <div class="ch val-ch vch-vb"></div>
+            </div>
+            <div class="crosshair-info">
+              <div class="card-key" style="margin-bottom:8px;">Share Code</div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--text2);word-break:break-all;line-height:1.6;margin-bottom:8px;">0;P;o;0.503;0t;1;0g;1;0o;1;0a;1;0f;0;1b;0</div>
+              <button class="copy-btn" onclick="copyCode('0;P;o;0.503;0t;1;0g;1;0o;1;0a;1;0f;0;1b;0','val-copy-hint')">copy code</button>
+              <span id="val-copy-hint" style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:8px;"></span>
+            </div>
+          </div>
+          <div class="xhair-params">
+            <div class="list">
+              <div class="list-row"><span class="list-key">Color</span><span class="list-val">White</span></div>
+              <div class="list-row"><span class="list-key">Outline</span><span class="list-val">On (0.503 opacity, 1px)</span></div>
+              <div class="list-row"><span class="list-key">Inner Line Length</span><span class="list-val">6</span></div>
+              <div class="list-row"><span class="list-key">Inner Line Thickness</span><span class="list-val">1</span></div>
+              <div class="list-row"><span class="list-key">Inner Line Offset</span><span class="list-val">1</span></div>
+              <div class="list-row"><span class="list-key">Inner Line Opacity</span><span class="list-val">1</span></div>
+              <div class="list-row"><span class="list-key">Outer Lines</span><span class="list-val">Off</span></div>
+              <div class="list-row"><span class="list-key">Center Dot</span><span class="list-val">Off</span></div>
+              <div class="list-row"><span class="list-key">Movement Error</span><span class="list-val">Off</span></div>
+              <div class="list-row"><span class="list-key">Firing Error</span><span class="list-val">Off</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-panel" id="val-binds">
+        <div class="card">
+          <table class="binds-table">
+            <tr><td>Jump</td><td><div class="keys"><kbd>SPACE</kbd><kbd>MWUP</kbd></div></td></tr>
+            <tr><td>Ability 1 (E)</td><td><div class="keys"><kbd>MOUSE4</kbd></div></td></tr>
+            <tr><td>Ability 2 (Q)</td><td><div class="keys"><kbd>MOUSE5</kbd></div></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GEAR -->
+  <div class="section">
+    <div class="section-label">gear</div>
+    <div class="list">
+      <div class="list-row"><span class="list-key">Mouse</span><span class="list-val">Logitech GPX Superlight</span></div>
+      <div class="list-row"><span class="list-key">Keyboard</span><span class="list-val">AKKO TAC 75HE</span></div>
+      <div class="list-row"><span class="list-key">Mousepad</span><span class="list-val">ATK Sky XSoft</span></div>
+      <div class="list-row"><span class="list-key">Headset</span><span class="list-val">HyperX Cloud II</span></div>
+      <div class="list-row"><span class="list-key">Monitor</span><span class="list-val">AOC 25G3ZM</span></div>
+    </div>
+  </div>
+
+  <!-- SPECS -->
+  <div class="section">
+    <div class="section-label">specs</div>
+    <div class="list">
+      <div class="list-row"><span class="list-key">CPU</span><span class="list-val">AMD Ryzen 7 7800X3D</span></div>
+      <div class="list-row"><span class="list-key">GPU</span><span class="list-val">NVIDIA RTX 2060 Super</span></div>
+      <div class="list-row"><span class="list-key">RAM</span><span class="list-val">32GB DDR5 6000MHz CL30</span></div>
+      <div class="list-row"><span class="list-key">Storage</span><span class="list-val">Lexar NM710 1TB NVMe M.2</span></div>
+      <div class="list-row"><span class="list-key">OS</span><span class="list-val">Windows 11</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>shifteyy.xyz</span>
+    <span>last updated 15 May 2026</span>
+  </div>
+</div>
+<script>
+  function switchGame(g, btn) {
+    document.querySelectorAll('.game-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.game-tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('game-' + g).classList.add('active');
+  }
+  function switchTab(g, t, btn) {
+    const p = document.getElementById('game-' + g);
+    p.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    p.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(g + '-' + t).classList.add('active');
+  }
+  function copyCode(code, hintId) {
+    navigator.clipboard.writeText(code).then(() => {
+      const h = document.getElementById(hintId);
+      h.textContent = 'copied';
+      setTimeout(() => h.textContent = '', 2000);
+    });
+  }
+</script>
+</body>
+</html>
