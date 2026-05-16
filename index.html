@@ -3,7 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>shifteyy</title>
+  <title>shifteyy.xyz</title>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const img = document.querySelector('.avatar');
+      const ready = () => {
+        const size = 64;
+        const canvas = document.createElement('canvas');
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(size/2, size/2, size/2, 0, Math.PI*2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, size, size);
+        const link = document.createElement('link');
+        link.rel = 'icon'; link.type = 'image/png';
+        link.href = canvas.toDataURL('image/png');
+        document.head.appendChild(link);
+      };
+      if (img.complete) ready(); else img.addEventListener('load', ready);
+    });
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
@@ -110,7 +131,7 @@
           steam
         </a>
         <a class="link-chip" href="https://www.faceit.com/en/players/shifteyy" target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24"><path d="M1 7.188L7.19 1h9.625l6.19 6.188v9.625L16.81 23H7.19L1 16.813V7.188zm8.922 9.374h4.156v-4.156h-4.156v4.156zM9.922 7.438H5.766v4.156h4.156V7.438zm4.156 0v4.156h4.156V7.438h-4.156z"/></svg>
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.999 2.705a.167.167 0 0 0-.312-.1 1141.27 1141.27 0 0 0-6.053 9.375H.218c-.221 0-.301.282-.11.352 7.227 2.73 17.667 6.836 23.5 9.134.15.06.39-.08.39-.18z"/></svg>
           faceit
         </a>
         <span class="link-chip">
