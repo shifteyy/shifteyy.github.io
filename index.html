@@ -64,13 +64,12 @@
     .ch-hr { width: 5px; height: 1.5px; left: calc(50% + 4px); top: calc(50% - 0.75px); }
     .ch-vt { width: 1.5px; height: 5px; left: calc(50% - 0.75px); top: calc(50% - 9px); }
     .ch-vb { width: 1.5px; height: 5px; left: calc(50% - 0.75px); top: calc(50% + 4px); }
-    /* Valorant: cyan, inner lines length 2, thickness 1, offset 2, center dot 1 */
-    .val-ch { background: #0ff; }
-    .vch-hl { width: 2px; height: 1px; left: calc(50% - 5px); top: calc(50% - 0.5px); }
-    .vch-hr { width: 2px; height: 1px; left: calc(50% + 3px); top: calc(50% - 0.5px); }
-    .vch-vt { width: 1px; height: 2px; left: calc(50% - 0.5px); top: calc(50% - 5px); }
-    .vch-vb { width: 1px; height: 2px; left: calc(50% - 0.5px); top: calc(50% + 3px); }
-    .vch-dot { width: 1px; height: 1px; left: calc(50% - 0.5px); top: calc(50% - 0.5px); }
+    /* Valorant 1522: white, inner lines length 5, thickness 2, offset 2, no dot, static */
+    .val-ch { background: #fff; }
+    .vch-hl { width: 5px; height: 2px; left: calc(50% - 8px); top: calc(50% - 1px); }
+    .vch-hr { width: 5px; height: 2px; left: calc(50% + 3px); top: calc(50% - 1px); }
+    .vch-vt { width: 2px; height: 5px; left: calc(50% - 1px); top: calc(50% - 8px); }
+    .vch-vb { width: 2px; height: 5px; left: calc(50% - 1px); top: calc(50% + 3px); }
     .crosshair-info { flex: 1; }
     .copy-btn { font-family: var(--mono); font-size: 11px; color: var(--text3); background: var(--surface2); border: 1px solid var(--border2); border-radius: 4px; padding: 4px 10px; cursor: pointer; transition: color .12s, border-color .12s; }
     .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
@@ -354,25 +353,24 @@
               <div class="ch val-ch vch-hr"></div>
               <div class="ch val-ch vch-vt"></div>
               <div class="ch val-ch vch-vb"></div>
-              <div class="ch val-ch vch-dot"></div>
             </div>
             <div class="crosshair-info">
               <div class="card-key" style="margin-bottom:8px;">Preview</div>
-              <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.6;">Primary crosshair, shown at 1:1 pixel scale.</div>
+              <div style="font-family:var(--mono);font-size:11px;color:var(--text2);line-height:1.6;">Current main crosshair.</div>
             </div>
           </div>
           <div class="xhair-params">
             <div class="list">
-              <div class="list-row"><span class="list-key">Color</span><span class="list-val">Cyan (#00FFFF)</span></div>
+              <div class="list-row"><span class="list-key">Color</span><span class="list-val">White</span></div>
               <div class="list-row"><span class="list-key">Outline</span><span class="list-val">Off</span></div>
-              <div class="list-row"><span class="list-key">Inner Line Length</span><span class="list-val">2</span></div>
-              <div class="list-row"><span class="list-key">Inner Line Thickness</span><span class="list-val">1</span></div>
+              <div class="list-row"><span class="list-key">Inner Line Length</span><span class="list-val">5</span></div>
+              <div class="list-row"><span class="list-key">Inner Line Thickness</span><span class="list-val">2</span></div>
               <div class="list-row"><span class="list-key">Inner Line Offset</span><span class="list-val">2</span></div>
               <div class="list-row"><span class="list-key">Inner Line Opacity</span><span class="list-val">1</span></div>
               <div class="list-row"><span class="list-key">Outer Lines</span><span class="list-val">Off</span></div>
-              <div class="list-row"><span class="list-key">Center Dot</span><span class="list-val">On (size 1, opacity 1)</span></div>
+              <div class="list-row"><span class="list-key">Center Dot</span><span class="list-val">Off</span></div>
               <div class="list-row"><span class="list-key">Movement Error</span><span class="list-val">Off</span></div>
-              <div class="list-row"><span class="list-key">Firing Error</span><span class="list-val">On</span></div>
+              <div class="list-row"><span class="list-key">Firing Error</span><span class="list-val">Off</span></div>
             </div>
           </div>
         </div>
